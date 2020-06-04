@@ -1,1 +1,57 @@
+//全排列
+#include<iostream>
+#include<vector>
+using namespace std;
+vector<vector<int>> permute(vector<int>&);      //全排列
+void dfs(vector<int>,int,int,vector<int>,bool [],vector<vector<int>>&);  //深度优先搜索遍历
+int main()
+{
+    vector<int> nums = {1,2,3,4};
+    vector<vector<int>> result = permute(nums);
+    for(int i=0;i<result.size();i++){
+        for(int j=0;j<result[i].size();j++){
+            cout<<result[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+}
 
+//全排列
+vector<vector<int>> permute(vector<int>& nums)
+{
+    vector<vector<int>> result;
+    int len = nums.size();
+    if(len == 0){
+        return result;
+    }
+
+    vector<int> path;       //路径数组
+    bool used[len] = {false};   //记录数组中的元素是否被访问过
+    dfs(nums,len,0,path,used,result);   //深度优先搜索遍历
+
+    return result;
+}     
+
+//深度优先搜索遍历
+void dfs(vector<int> nums,int len,int depth,vector<int> path,bool used[],vector<vector<int>> &result)
+{
+    //如果深度和数组中元素个数相等的话，将路径加入到结果中并返回
+    if(depth == len){
+        result.push_back(path);
+        return;
+    }
+
+    for(int i=0;i<len;i++){
+        //如果nums[i]被访问过了就取下一个元素
+        if(used[i]){
+            continue;
+        }
+        //如果未被访问过就将它加入路径中,并标记为已访问过
+        path.push_back(nums[i]);
+        used[i] = true;
+        dfs(nums,len,depth+1,path,used,result);   //深度优先搜索遍历
+        //回溯
+        path.pop_back();
+        used[i] = false;
+    }
+} 
