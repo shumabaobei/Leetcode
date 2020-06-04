@@ -1,1 +1,75 @@
 
+//N皇后II
+//给定一个整数 n，返回 n 皇后不同的解决方案的数量
+#include<iostream>
+#include<vector>
+using namespace std;
+int totalNQueens(int);       //求N皇后不同的解决方案的数量
+void dfs(int,vector<string>,int&);  //深度优先搜索遍历
+bool isValid(vector<string>,int,int);                   //判断放置位置是否合法
+int main()
+{
+    int result = totalNQueens(8);
+    cout<<result<<endl;
+
+    return 0;
+}
+
+//求N皇后不同的解决方案的数量
+int totalNQueens(int n)  
+{
+    int result = 0;
+    //保存每种情况，初始化全为字符'.'
+    vector<string> board(n,string(n,'.'));
+    dfs(0,board,result);      //深度优先搜索遍历
+
+    return result;
+}    
+
+//深度优先搜索遍历
+void dfs(int row,vector<string> board,int &result)
+{
+    //row为遍历深度
+    if(row == board.size()){
+        result++;
+        return;
+    }
+
+    int n = board[row].size();
+    for(int col=0;col<n;col++){
+        //放置位置不合法就继续
+        if(!isValid(board,row,col)){
+            continue;
+        }
+
+        board[row][col] = 'Q';
+        dfs(row+1,board,result);      //深度优先搜索遍历
+        board[row][col] = '.';
+    }
+}
+
+//判断放置位置board[row][col]是否合法
+bool isValid(vector<string> board,int row,int col)
+{
+    int n = board.size();
+    //检查列是否冲突
+    for(int i=0;i<n;i++){
+        if(board[i][col] == 'Q'){
+            return false;
+        }
+    }
+    //检查右上方是否有冲突
+    for(int i=row-1,j=col+1;i>=0&&j<n;i--,j++){
+        if(board[i][j] == 'Q'){
+            return false;
+        }
+    }
+    //检查左上方是否有冲突
+    for(int i=row-1,j=col-1;i>=0&&j>=0;i--,j--){
+        if(board[i][j] == 'Q'){
+            return false;
+        }
+    }
+
+    return true;
+}                   
