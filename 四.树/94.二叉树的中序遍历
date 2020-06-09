@@ -1,0 +1,84 @@
+//94.二叉树的中序遍历
+//给定一个二叉树，返回它的中序遍历
+#include<iostream>
+#include<vector>
+#include<stack>
+using namespace std;
+//二叉树的定义
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+vector<int> inorderTraversal(TreeNode*);        //二叉树的中序遍历(非递归)
+vector<int> inorderTraversal2(TreeNode*);        //二叉树的中序遍历(递归)
+void traversal(TreeNode*);                       //遍历
+void createTree(TreeNode**);                     //先序创建二叉树
+vector<int> result;     //全局变量
+int main()
+{
+    TreeNode *T;
+    //创建二叉树
+    createTree(&T);
+    vector<int> result = inorderTraversal(T);   //二叉树中序遍历
+    for(int i=0;i<result.size();i++){
+        cout<<result[i]<<" ";
+    }
+    cout<<endl;
+
+    return 0;
+}
+
+//二叉树的中序遍历(非递归)
+vector<int> inorderTraversal(TreeNode* root)
+{
+    vector<int> result;
+    stack<TreeNode*> s; //初始化栈
+    s.push(root);  //根节点入栈
+    while(!s.empty()){  //如果栈不空
+        while(s.top()){
+            s.push((s.top())->left);
+        }
+        s.pop();        //空指针出栈
+        if(!s.empty()){
+            TreeNode *p = s.top(); 
+            result.push_back(p->val);
+            s.pop();
+            s.push(p->right);
+        }
+    }
+
+    return result;
+}        
+
+//二叉树的中序遍历(递归)
+vector<int> inorderTraversal2(TreeNode* root)
+{
+    traversal(root);
+    return result;
+}
+
+//遍历
+void traversal(TreeNode* root)
+{
+    if(root){
+        traversal(root->left);
+        result.push_back(root->val);
+        traversal(root->right);
+    }
+}    
+
+//先序创建二叉树
+void createTree(TreeNode **T)
+{
+    int x;
+    cin>>x;
+    if(x == 9999){
+        (*T) = NULL;
+    }else{
+        (*T) = new TreeNode(x);
+        createTree(&((*T)->left));
+        createTree(&((*T)->right));
+    }
+}                    
